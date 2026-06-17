@@ -35,12 +35,29 @@ const NEWS = [
   { img: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80', label: 'AV-TEC', title: "Our New 20' x 60' LED Wall Steals the Show", desc: 'Our brand new massive LED wall was the star of a recent high-profile product launch, delivering larger-than-life visuals.' },
 ];
 
+const GALLERY_IMAGES = [
+  '/gallery/bc440e23-1ff3-4169-af77-40c874848a1b.jpg',
+  '/gallery/7894e275-c490-404a-b279-a4366824bd16.jpg',
+  '/gallery/19b57f7c-e740-4d10-80f1-7e226abafcfd.jpg',
+  '/gallery/7900fd62-19bf-4ca3-aa5c-5a20b7b7b2b5.jpg',
+  '/gallery/0fffa344-8289-404e-bec4-1fb754115443.jpg',
+  '/gallery/30bdfd59-7b60-4b0c-b87d-20193dedff55.jpg',
+  '/gallery/432d250b-2aca-433c-8a97-2261da7f376a.jpg',
+  '/gallery/3e7f749e-e078-4ec2-b892-2b2981e9084f.jpg',
+  '/gallery/8f52f091-e10a-4dd9-b06c-be58925150b4.jpg',
+  '/gallery/c4b439fe-114e-4322-a8b4-c694e440fe49.jpg',
+  '/gallery/d02eea4a-448b-41ef-b4d2-ab51063d38e9.jpg',
+  '/gallery/e88e9f35-4aa0-46fc-87e6-9698d8297471.jpg',
+  '/gallery/11f99473-86af-4540-a76f-ecb6983817c9.jpg',
+  '/gallery/1d40fc12-8399-4681-a4c7-eec07cfeff98.jpg',
+];
+
 const NAV_LINKS = [
   { label: 'Home', href: '#home' },
   { label: 'Services', href: '#services' },
   { label: 'About Us', href: '#about' },
   { label: 'Events', href: '#rental' },
-  { label: 'Gallery', href: '#news' },
+  { label: 'Gallery', href: '#gallery' },
   { label: 'News', href: '#news' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -49,8 +66,13 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [testimIndex, setTestimIndex] = useState(0);
+  const [lightbox, setLightbox] = useState<number | null>(null);
   const headerRef = useRef<HTMLElement>(null);
   const heroTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const openLightbox = (i: number) => setLightbox(i);
+  const closeLightbox = () => setLightbox(null);
+  const goLightbox = (dir: number) => setLightbox(i => i !== null ? (i + dir + GALLERY_IMAGES.length) % GALLERY_IMAGES.length : null);
 
   /* ── Hero auto-rotate ── */
   const startHeroTimer = useCallback(() => {
@@ -154,7 +176,7 @@ export default function Home() {
 
         {/* ═══ ABOUT PANEL ═══ */}
         <section className="section about-panel" id="about">
-          <div className="section-bg"><img src="/gallery/7900fd62-19bf-4ca3-aa5c-5a20b7b7b2b5.jpg" alt="" aria-hidden="true" loading="lazy" /></div>
+          <div className="section-bg"><video autoPlay muted loop playsInline><source src="/video/why-video.mp4" type="video/mp4" /></video></div>
           <div className="about-card reveal">
             <span className="eyebrow">What we&apos;re all about</span>
             <h2 className="heading-crimson">Audio Visual &amp; Event Technology</h2>
@@ -173,7 +195,7 @@ export default function Home() {
 
         {/* ═══ RENTAL ═══ */}
         <section className="fullbleed-section" id="rental">
-          <div className="section-bg"><img src="/gallery/0fffa344-8289-404e-bec4-1fb754115443.jpg" alt="" aria-hidden="true" loading="lazy" /></div>
+          <div className="section-bg"><video autoPlay muted loop playsInline><source src="/video/hero-new-video.mp4" type="video/mp4" /></video></div>
           <div>
             <h2>Rental</h2>
             <div className="fullbleed-tags">
@@ -187,7 +209,7 @@ export default function Home() {
 
         {/* ═══ SALES & DISTRIBUTION ═══ */}
         <section className="fullbleed-section">
-          <div className="section-bg"><img src="/gallery/30bdfd59-7b60-4b0c-b87d-20193dedff55.jpg" alt="" aria-hidden="true" loading="lazy" /></div>
+          <div className="section-bg"><video autoPlay muted loop playsInline><source src="/video/equipment-video.mp4" type="video/mp4" /></video></div>
           <div>
             <h2>Sales &amp; Distribution</h2>
             <div className="fullbleed-tags">
@@ -240,6 +262,21 @@ export default function Home() {
                   <a className="news-readmore" href="#contact">Read More <span>→</span></a>
                 </div>
               </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══ GALLERY ═══ */}
+        <section className="section gallery-section" id="gallery">
+          <div className="gallery-heading reveal">
+            <span className="eyebrow">Our Work</span>
+            <h2>Gallery</h2>
+          </div>
+          <div className="gallery-grid">
+            {GALLERY_IMAGES.map((src, i) => (
+              <div className="gallery-thumb reveal" key={i} onClick={() => openLightbox(i)} role="button" tabIndex={0} aria-label={`View image ${i + 1}`} onKeyDown={e => e.key === 'Enter' && openLightbox(i)}>
+                <img src={src} alt={`AV-TEC event ${i + 1}`} loading="lazy" />
+              </div>
             ))}
           </div>
         </section>
@@ -322,6 +359,17 @@ export default function Home() {
         </div>
         <p className="footer-copy">&copy; 2026 AV-TEC. All rights reserved.</p>
       </footer>
+
+      {/* ═══ LIGHTBOX ═══ */}
+      {lightbox !== null && (
+        <div className="lightbox" onClick={closeLightbox}>
+          <button className="lightbox-close" onClick={closeLightbox} aria-label="Close">✕</button>
+          <button className="lightbox-arrow prev" onClick={e => { e.stopPropagation(); goLightbox(-1); }} aria-label="Previous"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6" /></svg></button>
+          <img src={GALLERY_IMAGES[lightbox]} alt={`Gallery ${lightbox + 1}`} onClick={e => e.stopPropagation()} />
+          <button className="lightbox-arrow next" onClick={e => { e.stopPropagation(); goLightbox(1); }} aria-label="Next"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg></button>
+          <span className="lightbox-counter">{lightbox + 1} / {GALLERY_IMAGES.length}</span>
+        </div>
+      )}
 
       {/* ═══ WHATSAPP FLOAT ═══ */}
       <a className="whatsapp-float" href="https://wa.me/919876543210?text=Hi%20AV-TEC%2C%20I%20would%20like%20a%20quote" aria-label="Chat on WhatsApp">

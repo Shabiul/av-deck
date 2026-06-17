@@ -231,17 +231,17 @@ export default function Home() {
               <img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1200&q=80" alt="Rentals — Audio, Lighting, Video, Trussing" loading="lazy" />
               <h3>Rentals</h3>
               <ul className="service-card-list">
-                <li>Audio</li><li>Lighting</li><li>Video</li><li>Trussing</li>
+                <li><a href="/services/audio">Audio</a></li><li><a href="/services/lighting">Lighting</a></li><li><a href="/services/video">Video</a></li><li><a href="/services/trussing">Trussing</a></li>
               </ul>
             </div>
-            <div className="service-card reveal">
+            <a className="service-card reveal" href="/services/consultancy">
               <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=900&q=80" alt="Tech Consultancy" loading="lazy" />
               <h3>Tech Consultancy</h3>
-            </div>
-            <div className="service-card reveal">
+            </a>
+            <a className="service-card reveal" href="/services/installations">
               <img src="https://images.unsplash.com/photo-1559223607-b4d0555ae227?auto=format&fit=crop&w=900&q=80" alt="Installs & Integrations" loading="lazy" />
               <h3>Installs &amp; Integrations</h3>
-            </div>
+            </a>
           </div>
         </section>
 

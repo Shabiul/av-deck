@@ -1,13 +1,16 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Ukiyo from "ukiyojs";
 
 /* ── Social icon SVG paths ── */
 const SOCIAL = {
   linkedin: 'M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM20 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0014 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z',
   facebook: 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z',
   instagram: 'M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 01-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 017.8 2zm-.2 2A3.6 3.6 0 004 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 003.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 2a3 3 0 100 6 3 3 0 000-6z',
-  youtube: 'M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.43zM9.75 15.02V8.48l5.75 3.27z',
+  youtube: 'M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0-8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.43zM9.75 15.02V8.48l5.75 3.27z',
 };
 
 const SocialIcon = ({ name }: { name: keyof typeof SOCIAL }) => (
@@ -17,9 +20,9 @@ const SocialIcon = ({ name }: { name: keyof typeof SOCIAL }) => (
 /* ── Data ── */
 const HERO_SLIDES = [
   { type: 'video' as const, src: '/video/hero-video.mp4', poster: '/gallery/bc440e23-1ff3-4169-af77-40c874848a1b.jpg', heading: 'Experience Sound Like Never Before', sub: 'Bringing exceptional audio visual experiences since 1992' },
-  { type: 'video' as const, src: '/video/sequence-04-1.mp4', poster: '/gallery/bc440e23-1ff3-4169-af77-40c874848a1b.jpg', heading: 'Professional Event Production', sub: 'Corporate events, conferences, concerts, and exhibitions across India' },
-  { type: 'video' as const, src: '/video/sequence-04-9.mp4', poster: '/gallery/7894e275-c490-404a-b279-a4366824bd16.jpg', heading: 'Premium AV Technology', sub: 'LED walls, sound systems, stage lighting, and technical crew' },
-  { type: 'video' as const, src: '/video/sequence-04-7.mp4', poster: '/gallery/19b57f7c-e740-4d10-80f1-7e226abafcfd.jpg', heading: 'Trusted Technical Partners', sub: 'Over 30 years of reliable event technology support' },
+  { type: 'video' as const, src: '/video/Sequence 04_1.mp4', poster: '/gallery/bc440e23-1ff3-4169-af77-40c874848a1b.jpg', heading: 'Professional Event Production', sub: 'Corporate events, conferences, concerts, and exhibitions across India' },
+  { type: 'video' as const, src: '/video/Sequence 04_9.mp4', poster: '/gallery/7894e275-c490-404a-b279-a4366824bd16.jpg', heading: 'Premium AV Technology', sub: 'LED walls, sound systems, stage lighting, and technical crew' },
+  { type: 'video' as const, src: '/video/Sequence 04_7.mp4', poster: '/gallery/19b57f7c-e740-4d10-80f1-7e226abafcfd.jpg', heading: 'Trusted Technical Partners', sub: 'Over 30 years of reliable event technology support' },
 ];
 
 const TESTIMONIALS = [
@@ -31,7 +34,7 @@ const TESTIMONIALS = [
 
 const NEWS = [
   { img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=900&q=80', label: 'AV-TEC', title: "AV-TEC & New D&B GSL System Rock Major Festival", desc: 'We were proud to provide sound and lighting for one of India\'s largest music festivals, featuring the new D&B audiotechnik GSL system for exceptional clarity and coverage.' },
-  { img: '/gallery/image.png', label: 'AV-TEC', title: "World's First: AV-TEC Gets New D&B SL Series", desc: "We're the first company in the world to receive the revolutionary SL Series from D&B audiotechnik, after 5 years of development." },
+  { img: '/gallery/dj.jpg', label: 'AV-TEC', title: "World's First: AV-TEC Gets New D&B SL Series", desc: "We're the first company in the world to receive the revolutionary SL Series from D&B audiotechnik, after 5 years of development." },
   { img: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80', label: 'AV-TEC', title: "Our New 20' x 60' LED Wall Steals the Show", desc: 'Our brand new massive LED wall was the star of a recent high-profile product launch, delivering larger-than-life visuals.' },
 ];
 
@@ -78,20 +81,64 @@ export default function Home() {
     return () => clearInterval(t);
   }, []);
 
-  /* ── Scroll effects ── */
+  /* ── Scroll effects and GSAP animations ── */
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initialize Ukiyo parallax
+    const ukiyoInstance = new Ukiyo(".ukiyo", {
+      scale: 1.2,
+      speed: 1.5,
+      willChange: true
+    });
+
+    // Header scroll effect
     const onScroll = () => {
       headerRef.current?.classList.toggle('is-scrolled', window.scrollY > 50);
     };
     window.addEventListener('scroll', onScroll);
 
-    const obs = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); }),
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    // Smooth reveal animations using GSAP
+    const revealElements = document.querySelectorAll('.reveal');
+    revealElements.forEach((el, index) => {
+      gsap.fromTo(el, 
+        { opacity: 0, y: 60 }, 
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 1, 
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            end: "bottom 15%",
+            toggleActions: "play none none none"
+          },
+          delay: index * 0.1
+        }
+      );
+    });
 
-    return () => { window.removeEventListener('scroll', onScroll); obs.disconnect(); };
+    // Parallax effect for hero slides content
+    const heroSlideContents = document.querySelectorAll('.hero-slide-content');
+    heroSlideContents.forEach((content) => {
+      gsap.to(content, {
+        yPercent: 30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: content.closest('.hero-block'),
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    });
+
+    return () => { 
+      window.removeEventListener('scroll', onScroll); 
+      ScrollTrigger.getAll().forEach(st => st.kill()); 
+      ukiyoInstance.destroy();
+    };
   }, []);
 
   const t = TESTIMONIALS[testimIndex];
@@ -127,9 +174,9 @@ export default function Home() {
         {HERO_SLIDES.map((s, i) => (
           <section className="hero-block" key={i}>
             {s.type === 'video' ? (
-              <video autoPlay muted loop playsInline preload="auto" poster={s.poster}><source src={s.src} type="video/mp4" /></video>
+              <video className="ukiyo" autoPlay muted loop playsInline preload="auto" poster={s.poster}><source src={s.src} type="video/mp4" /></video>
             ) : (
-              <img src={s.src} alt={s.heading} loading={i === 0 ? 'eager' : 'lazy'} />
+              <img className="ukiyo" src={s.src} alt={s.heading} loading={i === 0 ? 'eager' : 'lazy'} />
             )}
             <div className="hero-slide-content">
               <h2>{s.heading}</h2>
@@ -141,7 +188,7 @@ export default function Home() {
 
         {/* ═══ ABOUT PANEL ═══ */}
         <section className="section about-panel" id="about">
-          <div className="section-bg"><video autoPlay muted loop playsInline><source src="/video/why-video.mp4" type="video/mp4" /></video></div>
+          <div className="section-bg"><video className="ukiyo" autoPlay muted loop playsInline><source src="/video/why-video.mp4" type="video/mp4" /></video></div>
           <div className="about-card reveal">
             <span className="eyebrow">What we&apos;re all about</span>
             <h2 className="heading-crimson">Audio Visual &amp; Event Technology</h2>
@@ -160,7 +207,7 @@ export default function Home() {
 
         {/* ═══ RENTAL ═══ */}
         <section className="fullbleed-section" id="rental">
-          <div className="section-bg"><video autoPlay muted loop playsInline><source src="/video/hero-new-video.mp4" type="video/mp4" /></video></div>
+          <div className="section-bg"><video className="ukiyo" autoPlay muted loop playsInline><source src="/video/hero-new-video.mp4" type="video/mp4" /></video></div>
           <div>
             <h2>Rental</h2>
             <div className="fullbleed-tags">
@@ -174,7 +221,7 @@ export default function Home() {
 
         {/* ═══ SALES & DISTRIBUTION ═══ */}
         <section className="fullbleed-section">
-          <div className="section-bg"><video autoPlay muted loop playsInline><source src="/video/equipment-video.mp4" type="video/mp4" /></video></div>
+          <div className="section-bg"><video className="ukiyo" autoPlay muted loop playsInline><source src="/video/equipment-video.mp4" type="video/mp4" /></video></div>
           <div>
             <h2>Sales &amp; Distribution</h2>
             <div className="fullbleed-tags">
@@ -248,7 +295,7 @@ export default function Home() {
 
         {/* ═══ TESTIMONIALS ═══ */}
         <section className="section testimonials-section">
-          <div className="section-bg"><img src="/gallery/432d250b-2aca-433c-8a97-2261da7f376a.jpg" alt="" aria-hidden="true" loading="lazy" /></div>
+          <div className="section-bg"><img className="ukiyo" src="/gallery/432d250b-2aca-433c-8a97-2261da7f376a.jpg" alt="" aria-hidden="true" loading="lazy" /></div>
           <div className="testimonial-content reveal">
             <span className="eyebrow">Testimonials</span>
             <h2>What Our Clients Say</h2>

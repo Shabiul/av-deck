@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -iE '\\\\.\\(png|jpg|jpeg|webp|svg|avif\\)$')",
+      "Bash(xargs wc -l)"
+    ]
+  }
+}
